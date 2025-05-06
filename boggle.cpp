@@ -96,4 +96,54 @@ bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>
 {
 //add your solution here!
 
+    // checking to see if valid
+		if (r >= board.size() || c >= board.size()) {
+
+        return false;
+    }
+
+    word += board[r][c]; // get the size of word 
+
+    // If not a valid word, stop
+    if (prefix.find(word) == prefix.end() && dict.find(word) == dict.end()) {
+        return false;
+    }
+
+    std::string longestValid = ""; // string for the longest valid word, ex: ai and aid, only aid counted
+
+    // If current word is valid, save it
+    if (dict.find(word) != dict.end()) {
+        longestValid = word;
+    }
+
+    // Recurse to next position
+    unsigned int nr = r + dr;
+    unsigned int nc = c + dc;
+
+    if (nr < board.size() && nc < board.size()) {
+
+        std::string temp = word;
+        std::set<std::string> tempResult;
+        boggleHelper(dict, prefix, board, temp, tempResult, nr, nc, dr, dc);
+
+        // Get the only word inserted into tempResult (if any)
+        if (!tempResult.empty()) {
+
+            std::string next = *tempResult.begin();
+
+            if (next.size() > longestValid.size()) {
+              
+                longestValid = next;
+            }
+        }
+    }
+
+    // Insert only the longest word found
+    if (!longestValid.empty()) {
+
+        result.insert(longestValid);
+        return true;
+    }
+
+    return false;
 }
